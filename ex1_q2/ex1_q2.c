@@ -56,7 +56,10 @@ int main(int agrc, char* argv[]) {
             waitpid(pid, &status, 0);
             if (WIFEXITED(status)){
                  exit_value = WEXITSTATUS(status);
-                 printf("exit_value %d,%d \n", exit_value,pid);
+                 fprintf(stderr, "process: %d file: %s number of students: %d\n",
+                     pid, input_file_name, exit_value);
+
+                // printf("exit_value %d,%d \n", exit_value,pid);
                  num_stud += exit_value;
             }
         }
