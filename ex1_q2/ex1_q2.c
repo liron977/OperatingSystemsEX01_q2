@@ -27,11 +27,11 @@ FILE* open_output_file(char* open_mode) {
 }
 int grade_calculation(FILE* output_file,int agrc, char* argv[]) {
     char* input_file_name;
-    int exit_value,status,num_stud = 0;
+    int exit_value,status,num_stud = 0,pid;
 
     for (int i = 2; i < agrc; i++) {
         input_file_name = argv[i];
-        int pid = fork();
+        pid = fork();
         if (pid == -1) {
             printf("The fork failed");
         }
