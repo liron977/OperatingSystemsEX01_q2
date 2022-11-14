@@ -1,6 +1,4 @@
 #include "ex1_q2.h"
-#define GRADES_FILE "all_std.txt" 
-#define MAX_LINE_LENGTH 80
 
 int main(int agrc, char* argv[]) {
     int num_stud = 0;
@@ -33,21 +31,21 @@ int grade_calculation(FILE* output_file,int agrc, char* argv[]) {
         input_file_name = argv[i];
         pid = fork();
         if (pid == -1) {
-            printf("The fork failed");
+            printf("fork failed\n");
+            exit(1);
         }
         if (pid == 0) {
             read_data_from_file(input_file_name, output_file);
         }
         else {
-            waitpid(pid, &status, 0);
-            if (WIFEXITED(status)) {
-                exit_value = WEXITSTATUS(status);
-                fprintf(stderr, "process: %d file: %s number of students: %d\n",
-                    pid, input_file_name, exit_value);
-                num_stud += exit_value;
-            }
+            pid = wait(&status);
+            exit_value = WEXITSTATUS(status);
+            fprintf(stderr, "process: %d file: %s number of students: %d\n",
+                pid, input_file_name, exit_value);
+            num_stud += exit_value;
         }
     }
+
     return num_stud;
 }
 void read_data_from_file(char* fille_name, FILE* output_file) {
@@ -55,7 +53,7 @@ void read_data_from_file(char* fille_name, FILE* output_file) {
     char line[MAX_LINE_LENGTH];
     int num_stud = 0;
 
-    while (fgets(line, sizeof(line), file)) {
+     while (fgets(line, sizeof(line), file)) {
         get_student_average(line, output_file);
         num_stud++;
     }
@@ -80,7 +78,7 @@ void get_student_average(char* line, FILE* output_file) {
 
     avg = (double)sum_of_grades / (counter);
     fprintf(output_file, "%s", student_name);
-    fprintf(output_file, " %.2f\n", avg);
+    fprintf(output_file, " %.1f\n", avg);
 }
 
 void report_data_summary(int num_stud) {
